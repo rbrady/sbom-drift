@@ -97,9 +97,11 @@ class Schema(BaseModel):
 
 
 class SBOM(BaseModel):
-    artifacts: List[Artifact]
-    artifactRelationships: List
-    source: Source
-    distro: Distro
+    artifacts: List[Artifact]  # primary comparisons
+    artifactRelationships: List  # examples empty
+    source: Source  # same stage comparisons
+    distro: Distro  # image / container cases
+
+    # info about creator of sbom, used to setup comparison in future
     descriptor: Descriptor
     schema_: Schema = Field(..., alias='schema')
