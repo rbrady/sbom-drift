@@ -38,7 +38,11 @@ def filter_sbom(filter_list: set, sbom_data: SBOM) -> List[dict]:
     for index, _ in enumerate(sbom_data.artifacts):
         # TODO: artifacts keyword could be passed in as a parameter to the
         # function.
+<<<<<<< HEAD
         sbom_filter.append(sbom_data.dict(include={"artifacts": {index: filter_list}}))
+=======
+        sbom_filter.append(sbom_data.dict(include={'artifacts': {index: filter_list}}))
+>>>>>>> main
 
     return sbom_filter
 
@@ -56,6 +60,7 @@ def convert_filter_to_sets(filtered_sbom: List[dict]) -> List[set]:
     for data in filtered_sbom:
         # TODO: artifacts keyword could be passed in as a parameter along
         # index.
+<<<<<<< HEAD
         for k, v in data["artifacts"][0].items():
             if not isinstance(v, list):
                 converted_list_set.append({k, v})
@@ -66,3 +71,9 @@ def convert_filter_to_sets(filtered_sbom: List[dict]) -> List[set]:
                 converted_list_set.append(set(v))
 
     return converted_list_set
+=======
+        converted_list_set.append(set(data['artifacts'][0].items()))
+
+    return converted_list_set
+
+>>>>>>> main
