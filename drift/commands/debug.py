@@ -2,15 +2,15 @@
 import click
 import ipdb
 
-from drift.utils import load_sbom
+from drift.utils import load_sbom_from_file
 
 
 @click.command()
 @click.argument('base_file', type=click.Path(exists=True))
 @click.argument('compare_file', type=click.Path(exists=True))
 def debug(base_file, compare_file):
-    base_sbom = load_sbom(base_file)
-    other_sbom = load_sbom(compare_file)
+    base_sbom = load_sbom_from_file(base_file)
+    other_sbom = load_sbom_from_file(compare_file)
     ipdb.set_trace()
 
 

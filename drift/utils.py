@@ -1,7 +1,7 @@
 from pathlib import Path
+from typing import List
 
 from pydantic import parse_file_as
-from typing import List
 
 from .data.model import SBOM
 
@@ -24,7 +24,7 @@ def load_sbom_from_json(input_data: dict) -> SBOM:
     return SBOM(**input_data)
 
 
-def filter_sbom(filter_list: set, sbom_data: SBOM): -> List[dict]:
+def filter_sbom(filter_list: set, sbom_data: SBOM) -> List[dict]:
     """Filter SBOM by a set of keywords
 
     >  filter_sbom({'name','type'}, ot)
