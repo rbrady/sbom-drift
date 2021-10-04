@@ -55,6 +55,26 @@ class Artifact(BaseModel):
     metadata: Optional[Metadata] = None
 
 
+class ArtifactDelta(BaseModel):
+    name: Optional[str] = None
+    version: Optional[str] = None
+    type: Optional[str] = None
+    foundBy: Optional[str] = None
+    locations: Optional[List[Location]] = None
+    licenses: Optional[dict] = None
+    language: Optional[str] = None
+    cpes: Optional[dict] = {}
+    purl: Optional[str] = None
+    metadataType: Optional[str] = None
+    metadata: Optional[Metadata] = None
+
+
+class ComparisonReport(BaseModel):
+    artifacts: Optional[List[ArtifactDelta]] = []
+    distro: Optional[DistroDelta] = None
+    source: Optional[SourceDelta] = None
+
+
 class Layer(BaseModel):
     mediaType: str
     digest: str
@@ -71,19 +91,44 @@ class Target(BaseModel):
     layers: Optional[List[Layer]] = None
     manifest: str
     config: str
-    repoDigests: List
+    repoDigests: List[str]
     scope: str
+
+
+class TargetDelta(BaseModel):
+    userInput: Optional[str] = None
+    imageID: Optional[str] = None
+    manifestDigest: Optional[str] = None
+    mediaType: Optional[str] = None
+    tags: Optional[dict] = None
+    imageSize: Optional[int] = None
+    layers: Optional[List[Layer]] = None  # TODO: change to a dict for added/removed
+    manifest: Optional[str] = None
+    config: Optional[str] = None
+    repoDigests: Optional[dict] = None
+    scope: Optional[str] = None
 
 
 class Source(BaseModel):
     type: str
-    target: Any
+    target: Any  # TODO: check this field with a source sbom
+
+
+class SourceDelta(BaseModel):
+    type: Optional[str] = None
+    target: Optional[TargetDelta] = None
 
 
 class Distro(BaseModel):
     name: str
     version: str
     idLike: str
+
+
+class DistroDelta(BaseModel):
+    name: Optional[str] = None
+    version: Optional[str] = None
+    idLike: Optional[str] = None
 
 
 class Descriptor(BaseModel):

@@ -3,21 +3,24 @@ import click
 
 from IPython import embed
 
-from drift.comparisions2.artifact import compare_artifact
+from drift.comparisons import compare_artifact
+from drift.scenarios import source_as_base
 from drift.utils import load_sbom_from_file
 
 
 @click.command()
 @click.argument('base_file', type=click.Path(exists=True))
 @click.argument('compare_file', type=click.Path(exists=True))
-def debug(base_file, compare_file):
+def compare(base_file, compare_file):
     base_sbom = load_sbom_from_file(base_file)
     other_sbom = load_sbom_from_file(compare_file)
-    embed()
+    result = source_as_base(base_sbom, other_sbom)
+    print(result)
+    # embed()
 
 
 if __name__ == '__main__':
-    debug()
+    compare()
 
 
 # scenarios to compare

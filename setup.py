@@ -19,6 +19,8 @@ setup(
     entry_points={
         'console_scripts': [
             'drift-debug = drift.commands.debug:debug',
+            'drift-source = drift.commands.source_compare:compare',
+            'drift-image = drift.commands.image_compare:compare',
         ],
     }
 )
