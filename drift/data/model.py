@@ -1,8 +1,29 @@
 from __future__ import annotations
-
-from typing import List, Optional, Any, Mapping
+from collections.abc import Iterable
+from typing import List, Optional, Any, Mapping, Union
 
 from pydantic import BaseModel, Field
+
+from ..utils import get_members_for_object
+
+
+class DeltaBaseModel(BaseModel):
+
+    def is_changed(self, filter_list) -> bool:
+
+        ret = False
+
+        attributes = [attribute for attribute in get_members_for_object(self, filter_list)]
+
+        for attribute in attributes:
+            item = getattr(self, attribute)
+            if isinstance(item, Iterable):
+                if len(item) > 0:
+                    ret = True
+            elif item:
+                ret = True
+
+        return ret
 
 
 class Location(BaseModel):
@@ -55,7 +76,7 @@ class Artifact(BaseModel):
     metadata: Optional[Metadata] = None
 
 
-class ArtifactDelta(BaseModel):
+class ArtifactDelta(DeltaBaseModel):
     name: Optional[str] = None
     version: Optional[str] = None
     type: Optional[str] = None
@@ -81,6 +102,12 @@ class Layer(BaseModel):
     size: int
 
 
+class LayerDelta(DeltaBaseModel):
+    mediaType: Optional[str] = None
+    digest: Optional[str] = None
+    size: Optional[int] = None
+
+
 class Target(BaseModel):
     userInput: str
     imageID: str
@@ -95,7 +122,7 @@ class Target(BaseModel):
     scope: str
 
 
-class TargetDelta(BaseModel):
+class TargetDelta(DeltaBaseModel):
     userInput: Optional[str] = None
     imageID: Optional[str] = None
     manifestDigest: Optional[str] = None
@@ -111,10 +138,10 @@ class TargetDelta(BaseModel):
 
 class Source(BaseModel):
     type: str
-    target: Any  # TODO: check this field with a source sbom
+    target: Union[Target, str]  # TODO: check this field with a source sbom
 
 
-class SourceDelta(BaseModel):
+class SourceDelta(DeltaBaseModel):
     type: Optional[str] = None
     target: Optional[TargetDelta] = None
 
@@ -125,7 +152,7 @@ class Distro(BaseModel):
     idLike: str
 
 
-class DistroDelta(BaseModel):
+class DistroDelta(DeltaBaseModel):
     name: Optional[str] = None
     version: Optional[str] = None
     idLike: Optional[str] = None
