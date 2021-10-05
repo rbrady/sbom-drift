@@ -1,29 +1,7 @@
 from __future__ import annotations
-from collections.abc import Iterable
-from typing import List, Optional, Any, Mapping, Union
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
-
-from ..utils import get_members_for_object
-
-
-class DeltaBaseModel(BaseModel):
-
-    def is_changed(self, filter_list) -> bool:
-
-        ret = False
-
-        attributes = [attribute for attribute in get_members_for_object(self, filter_list)]
-
-        for attribute in attributes:
-            item = getattr(self, attribute)
-            if isinstance(item, Iterable):
-                if len(item) > 0:
-                    ret = True
-            elif item:
-                ret = True
-
-        return ret
 
 
 class Location(BaseModel):
@@ -76,36 +54,10 @@ class Artifact(BaseModel):
     metadata: Optional[Metadata] = None
 
 
-class ArtifactDelta(DeltaBaseModel):
-    name: Optional[str] = None
-    version: Optional[str] = None
-    type: Optional[str] = None
-    foundBy: Optional[str] = None
-    locations: Optional[List[Location]] = None
-    licenses: Optional[dict] = None
-    language: Optional[str] = None
-    cpes: Optional[dict] = {}
-    purl: Optional[str] = None
-    metadataType: Optional[str] = None
-    metadata: Optional[Metadata] = None
-
-
-class ComparisonReport(BaseModel):
-    artifacts: Optional[List[ArtifactDelta]] = []
-    distro: Optional[DistroDelta] = None
-    source: Optional[SourceDelta] = None
-
-
 class Layer(BaseModel):
     mediaType: str
     digest: str
     size: int
-
-
-class LayerDelta(DeltaBaseModel):
-    mediaType: Optional[str] = None
-    digest: Optional[str] = None
-    size: Optional[int] = None
 
 
 class Target(BaseModel):
@@ -122,40 +74,15 @@ class Target(BaseModel):
     scope: str
 
 
-class TargetDelta(DeltaBaseModel):
-    userInput: Optional[str] = None
-    imageID: Optional[str] = None
-    manifestDigest: Optional[str] = None
-    mediaType: Optional[str] = None
-    tags: Optional[dict] = None
-    imageSize: Optional[int] = None
-    layers: Optional[List[Layer]] = None  # TODO: change to a dict for added/removed
-    manifest: Optional[str] = None
-    config: Optional[str] = None
-    repoDigests: Optional[dict] = None
-    scope: Optional[str] = None
-
-
 class Source(BaseModel):
     type: str
     target: Union[Target, str]  # TODO: check this field with a source sbom
-
-
-class SourceDelta(DeltaBaseModel):
-    type: Optional[str] = None
-    target: Optional[TargetDelta] = None
 
 
 class Distro(BaseModel):
     name: str
     version: str
     idLike: str
-
-
-class DistroDelta(DeltaBaseModel):
-    name: Optional[str] = None
-    version: Optional[str] = None
-    idLike: Optional[str] = None
 
 
 class Descriptor(BaseModel):

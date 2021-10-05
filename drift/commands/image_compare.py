@@ -4,7 +4,7 @@ import click
 from IPython import embed
 
 from drift.comparisons import compare_artifact
-from drift.data.model import SBOM
+from drift.data.models.sbom import SBOM
 from drift.scenarios import image_as_base
 
 
