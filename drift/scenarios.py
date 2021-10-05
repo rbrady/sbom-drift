@@ -33,7 +33,6 @@ def source_as_base(base: SBOM, other: SBOM) -> ComparisonReport:
 
     for name in common_artifact_names:
         artifact_delta = compare_artifact(base_artifacts.get(name), other_artifacts.get(name))
-        print(artifact_delta)
         if artifact_delta is not None:
             result.artifacts.append(artifact_delta)
 
